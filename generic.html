@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Receipts</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					
+				<center><a href="index.html"><img src="images/logo_transparent.png" alt="Smiley face" height="300" width="300"></a></center>
+				<br>	
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="elements.html">Leaderboard</a></li>
+							<li class="active"><a href="generic.html">Analytics</a></li>
+							<li><a href="bill.html">Receipts</a></li>
+							<!--
+							<li class="active"><a href="elements.html">Elements Reference</a></li>-->
+						</ul>
+						<ul class="icons">
+							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							
+									<h2>Analytics</h2>
+								    <p>View your usage patterns and reduce your carbon footprint.</p>
+						<div>
+							<h3>Distribution of your Carbon Footprint (Last 6 Months)</h3>
+							<canvas id="myChart"></canvas>
+						</div>
+						<div>
+							<h3>Emission Distribution</h3>
+							<canvas id="myRadarChart"></canvas>
+						</div>
+					</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+			<script type="text/javascript">
+				var ctx = document.getElementById('myChart').getContext('2d');
+				var mychart = new Chart(ctx, {
+					// The type of chart we want to create
+					type: 'line',
+				
+					// The data for our dataset
+					data: {
+						labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+						datasets: [{
+							label: 'Carbon Footprint',
+							backgroundColor: 'rgb(170, 244, 66)',
+							borderColor: 'rgb(25, 89, 40)',
+							data: [26, 22, 18, 20, 16, 12]
+						}]
+					},
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true
+									}
+								}]
+							},
+							legend: {
+            					display: false
+							}
+						}
+					});
+
+				var ctx2 = document.getElementById('myRadarChart').getContext('2d');
+				var myRadarChart = new Chart(ctx2, {
+					type: 'doughnut',
+					data: {
+						labels: ['PG&E','Groceries','Car Fuel','Waste','Miscellaneous'],
+						datasets: [{
+							label: 'Carbon Footprint',
+							backgroundColor: ['rgb(255, 99, 132)','rgb(54, 162, 235)','rgb(255, 208, 86)','rgb(155, 240, 132)','rgb(173, 66, 244)'],
+							data: [36, 16, 28, 12, 19]
+						}]
+					},
+					options: {
+						title: {
+						display: true
+						}
+					}
+				});
+
+				var calcEmissions = (units) => {
+					return units * 1.004
+				};
+				var payee;
+				var date;
+				var payment_amount;
+				var id = '5c9fa4e6322fa06b677949e2'
+
+				//GET data
+				var dataFromCapitalOne = {
+				  "async": true,
+				  "crossDomain": true,
+				  "url": "http://api.reimaginebanking.com/accounts?key=1ec0d7166feb6612d0618480de29012f",
+				  "method": "GET",
+				  "headers": {
+				    "Content-Type": "application/json",
+				    "cache-control": "no-cache",
+				    "Postman-Token": "c09cf7ee-0bdc-4714-8abd-e5ce5a18a182"
+				  },
+				  "processData": false,
+				  "data": ""
+				}
+
+				$.ajax(dataFromCapitalOne).done(function (response) {
+				  console.log(response);
+				});
+
+				// POST data to 
+				var dataToCapitalOne = {
+	  			"async": true,
+				"crossDomain": true,
+				"url": "http://api.reimaginebanking.com/accounts/5c9fa4e8322fa06b677949e5/bills?key=1ec0d7166feb6612d0618480de29012f",
+				"method": "POST",
+				"headers": {
+				"Content-Type": "application/json",
+				"cache-control": "no-cache",
+				"Postman-Token": "ebfc4e69-bd83-42e7-ae7b-64cd005e0ff9"
+				},
+				"processData": false,
+				"data": "{\n  \"status\": \"pending\",\n  \"payee\":" + payee + ",\n  \"nickname\": \"nick\",\n  \"payment_date\":" + date + ",\n  \"recurring_date\": 1,\n \"payment_amount\":"+ payment_amount + "\n}"
+				}
+
+				$.ajax(dataToCapitalOne).done(function (response) {
+	  			console.log(response);
+				});
+
+				
+
+			</script>
+
+	</body>
+</html>
